@@ -1,4 +1,4 @@
-pragma solidity ^ 0.4.8;
+pragma solidity 0.4.18;
 
 // <ORACLIZE_API>
 /*
@@ -1881,8 +1881,8 @@ contract BAF is ERC20,usingOraclize
             {
                 balances[address(this)] -= no_of_token;
                 balances[userAddress[myid]] += no_of_token;
-                Transfer(address(this),userAddress[myid], no_of_token);
                 check_array_add(userAddress[myid]);
+                Transfer(address(this),userAddress[myid], no_of_token);
             }
             else
             revert();
@@ -1919,8 +1919,8 @@ contract BAF is ERC20,usingOraclize
             balances[_to] + _amount > balances[_to]) {
             balances[msg.sender] -= _amount;
             balances[_to] += _amount;
-            Transfer(msg.sender, _to, _amount);
             check_array_add(_to);
+            Transfer(msg.sender, _to, _amount);
             return true;
         } else {
             return false;
@@ -2067,8 +2067,9 @@ contract BafREWARD {
             ether_profit = msg.value;
             profit_per_token = ether_profit / totalSupply;
 
-            Message(profit_per_token);
+            
             snapshot_all_address();
+            Message(profit_per_token);
 
         }
         else
@@ -2097,14 +2098,15 @@ contract BafREWARD {
  
         holder_token_balance = snapshot_bal[msg.sender];
         holder_profit = holder_token_balance * profit_per_token;
+        setRewardStatus(msg.sender, false);
         msg.sender.transfer(holder_profit);
         Transfer(owner, msg.sender, holder_profit); // Notify anyone listening that this transfer took place
-        setRewardStatus(msg.sender, false);
+        
     }
     
     //if the contract has any ether this method is called by the owner and all the ether will be transferred to owners account
     function drain() public onlyOwner {
-        owner.transfer(this.balance) ;
+        owner.transfer(this.balance);
     }
     
      // used in reward contract
